@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
     steps:
-      - name: Connect to server
+      - name: Execute remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.WORK_SERVER_ADDRESS }}
@@ -62,7 +62,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.WORK_SERVER_PASSPHRASE }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/infra_actions:latest
+            sudo docker pull ilyaboyur/infra_actions:latest
             # Остановка всех контейнеров
             sudo docker stop $(sudo docker ps -a -q)
-            sudo docker run -d --rm -з 5000:5000 ${{ secrets.DOCKER_USERNAME }}/infra_actions:latest
+            sudo docker run -d --rm -з 5000:5000 ilyaboyur/infra_actions:latest
